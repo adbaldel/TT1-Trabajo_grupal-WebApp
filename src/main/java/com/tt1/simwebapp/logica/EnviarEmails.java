@@ -28,8 +28,8 @@ public class EnviarEmails implements InterfazEnviarEmails
     public EnviarEmails()
     {
         client = Configuration.getDefaultApiClient();
-//        client.setBasePath(System.getenv("API_URL"));
-        client.setBasePath(LOCALHOST_EMAIL);
+        client.setBasePath(System.getenv("API_URL"));
+//        client.setBasePath(LOCALHOST_EMAIL);
 //        client.setBasePath(DOCKERCOMPOSE_EMAIL);
     }
 

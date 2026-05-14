@@ -27,8 +27,8 @@ public class ContactoSim implements InterfazContactoSim {
 
     public ContactoSim() {
         client = Configuration.getDefaultApiClient();
-        //        client.setBasePath(System.getenv("API_URL"));
-        client.setBasePath(LOCALHOST_SIM);
+        client.setBasePath(System.getenv("API_URL"));
+//        client.setBasePath(LOCALHOST_SIM);
 //        client.setBasePath(DOCKERCOMPOSE_SIM);
     }
 
