@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mis Solicitudes')}"></head>
+<body class="pt-28 pb-10 px-4 flex justify-center items-start min-h-screen font-sans">
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="bg-neolavender neo-border neo-shadow max-w-xl w-full p-8 mt-10 relative">
+    <h2 class="text-3xl font-bold uppercase tracking-tight bg-white inline-block px-6 py-2 neo-border neo-shadow-sm absolute -top-6 -right-6">
+        Historial
+    </h2>
+
+    <form th:action="@{/mis-solicitudes}" method="post" class="space-y-8 mt-8">
+        <div class="bg-white p-6 neo-border neo-shadow-sm relative">
+            <h3 class="text-xl font-bold mb-4 uppercase bg-neogreen inline-block px-3 py-1 neo-border absolute -top-5 left-4">Buscar</h3>
+
+            <div class="flex flex-col gap-2 mt-4">
+                <label for="nombreUsuario" class="font-bold text-lg uppercase">Nombre de Usuario:</label>
+                <input type="text" id="nombreUsuario" class="neo-input p-3 text-xl font-bold" name="nombreUsuario" required />
+            </div>
+        </div>
+
+        <button type="submit" class="neo-btn bg-black text-white w-full py-5 text-2xl hover:bg-gray-800">
+            Buscar
+        </button>
+    </form>
+</div>
+</body>
+</html>

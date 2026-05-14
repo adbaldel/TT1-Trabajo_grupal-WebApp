@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Visualización de la Isla')}"></head>
+<body class="pt-28 pb-10 px-4 flex justify-center items-start min-h-screen font-sans">
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<style type="text/tailwindcss">
+	@layer utilities {
+		.grid-container {
+			display: grid;
+			grid-gap: 2px;
+			background-color: black;
+			border: 4px solid black;
+		}
+		.grid-container div {
+			width: 50px;
+			height: 50px;
+			transition: none;
+		}
+		input[type=range] {
+			-webkit-appearance: none;
+			@apply border-[3px] border-black h-8 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)];
+		}
+		input[type=range]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			@apply w-6 h-10 bg-neoyellow border-[3px] border-black cursor-pointer;
+		}
+	}
+</style>
+
+<div class="bg-white neo-border neo-shadow max-w-4xl w-full p-8 mt-10 relative flex flex-col items-center">
+
+	<h2 class="text-3xl font-bold uppercase tracking-tight bg-neogreen text-black inline-block px-6 py-2 neo-border neo-shadow-sm absolute -top-6 -right-6 z-10">
+		Isla Grid
+	</h2>
+
+	<div class="flex flex-wrap items-center justify-center gap-6 mt-8 mb-10 bg-neolavender neo-border p-6 neo-shadow-sm w-full relative">
+		<h3 class="text-xl font-bold uppercase bg-white inline-block px-3 py-1 neo-border absolute -top-5 left-4">Controles</h3>
+
+		<button id="playBtn" class="neo-btn bg-white px-8 py-3 text-xl hover:bg-neoyellow">▶ Play</button>
+
+		<div class="flex items-center gap-2 bg-white neo-border p-2">
+			<label for="velocity" class="font-bold px-2 uppercase text-lg">Velocidad:</label>
+			<select id="velocity" class="font-bold border-2 border-black p-2 bg-neopink text-white outline-none cursor-pointer text-lg">
+				<option value="1000">0.5x</option>
+				<option value="500" selected>1x</option>
+				<option value="250">2x</option>
+				<option value="100">5x</option>
+			</select>
+		</div>
+
+		<div class="flex items-center gap-4 bg-white neo-border p-3 px-5">
+			<label for="mySlider" class="font-bold uppercase text-lg">Timeline:</label>
+			<input type="range" id="mySlider" min="0" th:max="${maxTime}" value="0" class="w-48 md:w-64">
+			<span id="sliderValue" class="font-bold text-2xl bg-black text-white px-4 py-1 neo-border">0</span>
+		</div>
+	</div>
+
+	<div class="grid-container neo-shadow mb-4" id="gr">
+	</div>
+</div>
+
+<script th:inline="javascript">
+	const count = /*[[${count}]]*/ 3;
+	const colors = /*[[${colors}]]*/ {};
+
+	const slider = document.getElementById("mySlider");
+	const sliderDisplay = document.getElementById("sliderValue");
+	const playBtn = document.getElementById("playBtn");
+	const velocitySelect = document.getElementById("velocity");
+
+	let playInterval = null;
+
+	function createSquares(){
+		var grid = document.getElementById('gr');
+		for(var y = 0; y < count; y++){
+			for(var x = 0; x < count; x++){
+				var node = document.createElement("div");
+				node.id = x+'-'+y;
+				grid.appendChild(node);
+			}
+		}
+		document.getElementsByClassName('grid-container').item(0).style.gridTemplateColumns = 'repeat('+count+',50px)';
+	}
+
+	function drawSimulationTick() {
+		sliderDisplay.textContent = slider.value;
+
+		for(var y = 0; y < count; y++){
+			for(var x = 0; x < count; x++){
+				var node = document.getElementById(x+'-'+y);
+				node.style.background = colors[slider.value+'-'+y+'-'+x] ?? 'floralwhite';
+			}
+		}
+	}
+
+	function togglePlay() {
+		if (playInterval) { stopPlaying(); } else { startPlaying(); }
+	}
+
+	function stopPlaying() {
+		clearInterval(playInterval);
+		playInterval = null;
+		playBtn.textContent = "▶ Play";
+		playBtn.style.background = "white";
+		playBtn.style.color = "black";
+	}
+
+	function startPlaying() {
+		playBtn.textContent = "⏸ Pause";
+		playBtn.style.background = "black";
+		playBtn.style.color = "white";
+
+		const speedMs = parseInt(velocitySelect.value, 10);
+
+		playInterval = setInterval(() => {
+			let currentValue = parseInt(slider.value, 10);
+			let maxValue = parseInt(slider.getAttribute('max') || 100, 10);
+
+			if (currentValue >= maxValue) {
+				slider.value = 0;
+			} else {
+				slider.value = currentValue + 1;
+			}
+
+			drawSimulationTick();
+		}, speedMs);
+	}
+
+	slider.addEventListener("input", function() {
+		if (playInterval) stopPlaying();
+		drawSimulationTick();
+	});
+
+	playBtn.addEventListener("click", togglePlay);
+
+	velocitySelect.addEventListener("change", function() {
+		if (playInterval) {
+			stopPlaying();
+			startPlaying();
+		}
+	});
+
+	createSquares();
+	drawSimulationTick();
+</script>
+</body>
+</html>

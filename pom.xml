@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Versión del modelo de objetos del proyecto (POM). Siempre es 4.0.0 para Maven 2 y 3. -->
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--
+		=============================================================
+		PARENT: Herencia de configuración
+		=============================================================
+		Heredamos de Spring Boot. Esto nos proporciona automáticamente
+		versiones compatibles de muchas librerías (evitando conflictos)
+		y configuraciones predeterminadas útiles.
+	-->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.0.3</version>
+		<relativePath/> <!-- busca el parent en el repositorio remoto, no localmente -->
+	</parent>
+
+	<!--
+		=============================================================
+		METADATOS DEL PROYECTO
+		=============================================================
+		Identificadores únicos de tu aplicación.
+	-->
+	<groupId>com.tt1</groupId>
+	<artifactId>simwebapp</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Web app de simulaciones</name>
+	<description>
+		Web app que actúa cómo capa de presentación amigable para el servidor de simulaciones del trabajo en grupo de TT1.
+		Este proyecto es el trabajo individual de TT1.
+	</description>
+
+	<!--
+        =============================================================
+        PROPIEDADES
+        =============================================================
+    -->
+	<properties>
+		<!-- Especificamos explícitamente que compilaremos usando Java 21 -->
+		<java.version>21</java.version>
+	</properties>
+
+	<!--
+		=============================================================
+		REPOSITORIOS LOCALES
+		=============================================================
+		Aquí definimos un repositorio Maven local dentro del propio proyecto.
+		Esto permite a Maven buscar dependencias (como nuestro cliente openapi)
+		y, al incluir su POM original, resolverá todas las dependencias
+		transitivas (gson, okhttp, etc.) automáticamente de internet.
+	-->
+	<repositories>
+		<repository>
+			<id>repo-local-proyecto</id>
+			<url>file://${project.basedir}/maven-repo-local</url>
+		</repository>
+	</repositories>
+
+	<!--
+		=============================================================
+		DEPENDENCIAS
+		=============================================================
+	-->
+	<dependencies>
+		<!-- 1. SPRING BOOT STARTERS -->
+
+		<!-- Herramientas para consumir APIs REST externas (como el servidor grupal) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
+		</dependency>
+
+		<!-- Base para aplicaciones Web y API REST (incluye Tomcat embebido) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+
+		<!-- Motor de plantillas para renderizar las vistas HTML (UI) en el servidor -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- 2. DEPENDENCIAS DE TESTING (Sólo disponibles al ejecutar pruebas) -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 3. CLIENTE OPENAPI AUTOGENERADO -->
+
+		<!--
+			Al descargarse de nuestro "maven-repo-local" junto con su pom.xml original,
+			las dependencias transitivas se resuelven automáticamente de forma transparente.
+		-->
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>openapi-java-client</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
+
+	<!--
+		=============================================================
+		BUILD Y PLUGINS
+		=============================================================
+	-->
+	<build>
+		<plugins>
+			<!--
+				Spring Boot Maven Plugin:
+				Empaqueta la aplicación compilada y todas sus dependencias en un único
+				archivo ejecutable .jar (conocido como fat-jar o uber-jar).
+			-->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

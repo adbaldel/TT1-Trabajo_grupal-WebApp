@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Respuesta')}"></head>
+<body class="pt-28 pb-10 px-4 flex justify-center items-start min-h-screen font-sans">
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="bg-white neo-border neo-shadow max-w-xl w-full p-8 mt-10 relative">
+    <h2 class="text-3xl font-bold uppercase tracking-tight bg-neoyellow inline-block px-6 py-2 neo-border neo-shadow-sm absolute -top-6 -right-6">
+        Respuesta
+    </h2>
+
+    <div class="bg-white p-6 neo-border neo-shadow-sm relative mt-8 mb-8 text-center min-h-[150px] flex items-center justify-center">
+        <h3 class="text-xl font-bold mb-4 uppercase bg-black text-white inline-block px-3 py-1 neo-border absolute -top-5 left-4">Servidor</h3>
+        <span class="text-2xl font-bold" th:text="${resultado}">Aquí aparecerá el resultado</span>
+    </div>
+
+    <button onclick="window.history.back()" class="neo-btn bg-black text-white w-full py-5 text-2xl hover:bg-gray-800">
+        Volver
+    </button>
+</div>
+</body>
+</html>

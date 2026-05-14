@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Configurar Simulación')}"></head>
+<body class="pt-28 pb-10 px-4 flex justify-center items-start min-h-screen font-sans">
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="bg-neopink neo-border neo-shadow max-w-xl w-full p-8 mt-10 relative">
+
+    <h2 class="text-3xl font-bold uppercase tracking-tight bg-white inline-block px-6 py-2 neo-border neo-shadow-sm absolute -top-6 -right-6">
+        Configurar
+    </h2>
+
+    <form th:action="@{/solicitar}" method="post" class="space-y-8 mt-8">
+
+        <div class="bg-white p-6 neo-border neo-shadow-sm relative">
+            <h3 class="text-xl font-bold mb-4 uppercase bg-neoyellow inline-block px-3 py-1 neo-border absolute -top-5 left-4">Usuario</h3>
+            <div class="flex flex-col gap-2 mt-4">
+                <label for="nombreUsuario" class="font-bold text-lg uppercase">Nombre:</label>
+                <input type="text" id="nombreUsuario" name="nombreUsuario" required class="neo-input p-3 text-xl font-bold" />
+            </div>
+        </div>
+
+        <div class="bg-white p-6 neo-border neo-shadow-sm relative">
+            <h3 class="text-xl font-bold mb-4 uppercase bg-neoblue inline-block px-3 py-1 neo-border text-white absolute -top-5 left-4">Entidades</h3>
+            <div class="space-y-4 mt-4">
+                <div th:each="entity : ${entities}" class="flex flex-col gap-2">
+                    <label th:for="${entity.name}" th:text="'Num. de ' + ${entity.name} + 's:'" class="font-bold text-lg uppercase"></label>
+                    <input type="number" min="0" th:id="${entity.name}" th:name="${entity.name}" value="0" required class="neo-input p-3 text-xl font-bold" />
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="neo-btn bg-black text-white w-full py-5 text-2xl hover:bg-gray-800">
+            Solicitar Simulación
+        </button>
+    </form>
+</div>
+</body>
+</html>
