@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!maven-repo-local/**/*.jar
 *.war
 *.nar
 *.ear
