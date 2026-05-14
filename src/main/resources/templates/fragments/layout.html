@@ -71,12 +71,48 @@
 </head>
 <body class="pt-28 pb-10 px-4 flex justify-center items-start min-h-screen font-sans">
 
-<nav th:fragment="navbar" class="fixed top-0 left-0 w-full bg-neolavender neo-border shadow-[0px_6px_0px_0px_rgba(0,0,0,1)] flex flex-wrap justify-center gap-4 p-4 z-50">
-    <a th:href="@{/solicitar}" class="bg-white neo-btn px-5 py-2 hover:bg-neoyellow text-black no-underline">Nueva Simulación</a>
-    <a th:href="@{/comprobar}" class="bg-white neo-btn px-5 py-2 hover:bg-neoblue text-black no-underline">Comprobar</a>
-    <a th:href="@{/mis-solicitudes}" class="bg-white neo-btn px-5 py-2 hover:bg-neopink text-black no-underline">Mis Solicitudes</a>
-    <a th:href="@{/resultados}" class="bg-white neo-btn px-5 py-2 hover:bg-neogreen text-black no-underline">Resultados</a>
-    <a th:href="@{/email}" class="bg-white neo-btn px-5 py-2 hover:bg-neoyellow text-black no-underline">Enviar Email</a>
+<nav th:fragment="navbar" class="fixed top-0 left-0 w-full bg-neolavender neo-border shadow-[0px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center p-4 z-50 min-h-[80px]">
+
+    <div class="flex flex-wrap justify-center gap-4">
+        <a th:href="@{/solicitar}" class="bg-white neo-btn px-5 py-2 hover:bg-neoyellow text-black no-underline">Nueva Simulación</a>
+        <a th:href="@{/estado}" class="bg-white neo-btn px-5 py-2 hover:bg-neoblue text-black no-underline">Comprobar Estado</a>
+        <a th:href="@{/mis-solicitudes}" class="bg-white neo-btn px-5 py-2 hover:bg-neopink text-black no-underline">Mis Solicitudes</a>
+        <a th:href="@{/resultado}" class="bg-white neo-btn px-5 py-2 hover:bg-neogreen text-black no-underline">Ver Resultado</a>
+        <a th:href="@{/email}" class="bg-white neo-btn px-5 py-2 hover:bg-neoyellow text-black no-underline">Enviar Email</a>
+    </div>
+
+    <div class="absolute right-4 top-4" th:if="${session.nombreUsuario != null}">
+        <div class="relative inline-block text-left">
+            <button type="button" class="bg-white neo-btn px-4 py-2 hover:bg-gray-100 text-black flex items-center gap-2" id="user-menu-button" aria-expanded="true" aria-haspopup="true" onclick="toggleUserDropdown()">
+                <span th:text="${session.nombreUsuario}" class="max-w-[100px] truncate">User</span>
+                <svg class="-mr-1 h-5 w-5 text-black" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+
+            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white neo-border neo-shadow focus:outline-none z-50 transition-all origin-top-right" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                <div class="py-1" role="none">
+                    <a th:href="@{/logout}" class="text-black block px-4 py-3 text-lg font-bold hover:bg-neopink hover:text-white transition-colors" role="menuitem" tabindex="-1">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleUserDropdown() {
+            document.getElementById('user-dropdown').classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.closest('#user-menu-button')) {
+                const dropdown = document.getElementById('user-dropdown');
+                if (dropdown && !dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        }
+    </script>
 </nav>
 
 </body>

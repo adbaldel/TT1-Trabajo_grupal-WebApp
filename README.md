@@ -12,9 +12,9 @@ Su función principal es ofrecer una interfaz gráfica de usuario (GUI) amigable
 
 La aplicación está construida sobre Spring Boot y sigue rigurosamente el patrón arquitectónico Modelo-Vista-Controlador (MVC), dividiendo sus responsabilidades en los siguientes paquetes principales:
 
-* **Presentción / Controladores (`com.tt1.simwebapp.presentacion`):** Gestionan el enrutamiento HTTP y las interacciones del usuario capturando las peticiones de los formularios web (ej. `SolicitudController`, `GridController`).
-* **Lógica de Negocio / Servicios (`com.tt1.simwebapp.logica`):** Contiene los servicios que actúan como clientes REST para comunicarse con la API del backend autogenerada mediante OpenAPI (`ContactoSim`, `EnviarEmails`).
-* **Modelo de Dominio (`com.tt1.simwebapp.modelo`):** Clases que encapsulan los datos de las simulaciones, entidades, puntos y datos de los formularios.
+* **Presentción / Controladores (`com.tt1.simwebapp.presentation`):** Gestionan el enrutamiento HTTP y las interacciones del usuario capturando las peticiones de los formularios web (ej. `SolicitudController`, `GridController`).
+* **Lógica de Negocio / Servicios (`com.tt1.simwebapp.services`):** Contiene los servicios que actúan como clientes REST para comunicarse con la API del backend autogenerada mediante OpenAPI (`ContactoSim`, `EnviarEmails`).
+* **Modelo de Dominio (`com.tt1.simwebapp.model`):** Clases que encapsulan los datos de las simulaciones, entidades, puntos y datos de los formularios.
 * **Vistas (`src/main/resources/templates`):** Páginas HTML procesadas dinámicamente en el servidor utilizando el motor Thymeleaf (ej. `solicitud.html`, `grid.html`, `formResult.html`).
 
 ## **Referencia de la Web App**
@@ -22,7 +22,7 @@ La aplicación está construida sobre Spring Boot y sigue rigurosamente el patr�
 La capa de presentación responde a las siguientes peticiones HTTP sirviendo vistas en HTML:
 
 ### **Gestión de Simulaciones (Solicitudes)**
-* `GET /solicitud`: Devuelve un formulario para introducir las cantidades iniciales de cada entidad a simular.
+* `GET /solicitud`: Devuelve un formulario para introducir las cantidades iniciales de cada creature a simular.
 * `POST /solicitud`: Procesa los datos del formulario, realiza la llamada al servidor grupal y devuelve una vista con el `token` asociado a la solicitud para futuras consultas.
 
 ### **Resultados**

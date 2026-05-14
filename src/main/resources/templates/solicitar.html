@@ -10,22 +10,18 @@
         Configurar
     </h2>
 
+    <div th:if="${problemDetails != null}" class="bg-red-400 p-6 neo-border neo-shadow-sm relative mt-8 mb-4">
+        <h3 class="text-xl font-bold mb-4 uppercase bg-black text-white inline-block px-3 py-1 neo-border absolute -top-5 left-4">Error</h3>
+        <p class="text-xl font-bold mt-2" th:text="${problemDetails}">Detalles del problema</p>
+    </div>
+
     <form th:action="@{/solicitar}" method="post" class="space-y-8 mt-8">
-
-        <div class="bg-white p-6 neo-border neo-shadow-sm relative">
-            <h3 class="text-xl font-bold mb-4 uppercase bg-neoyellow inline-block px-3 py-1 neo-border absolute -top-5 left-4">Usuario</h3>
-            <div class="flex flex-col gap-2 mt-4">
-                <label for="nombreUsuario" class="font-bold text-lg uppercase">Nombre:</label>
-                <input type="text" id="nombreUsuario" name="nombreUsuario" required class="neo-input p-3 text-xl font-bold" />
-            </div>
-        </div>
-
         <div class="bg-white p-6 neo-border neo-shadow-sm relative">
             <h3 class="text-xl font-bold mb-4 uppercase bg-neoblue inline-block px-3 py-1 neo-border text-white absolute -top-5 left-4">Entidades</h3>
             <div class="space-y-4 mt-4">
-                <div th:each="entity : ${entities}" class="flex flex-col gap-2">
-                    <label th:for="${entity.name}" th:text="'Num. de ' + ${entity.name} + 's:'" class="font-bold text-lg uppercase"></label>
-                    <input type="number" min="0" th:id="${entity.name}" th:name="${entity.name}" value="0" required class="neo-input p-3 text-xl font-bold" />
+                <div th:each="creatureName : ${creatureNames}" class="flex flex-col gap-2">
+                    <label th:for="${creatureName}" th:text="'Num. de ' + ${creatureName} + 's:'" class="font-bold text-lg uppercase"></label>
+                    <input type="number" min="0" th:id="${creatureName}" th:name="${creatureName}" value="0" required class="neo-input p-3 text-xl font-bold" />
                 </div>
             </div>
         </div>

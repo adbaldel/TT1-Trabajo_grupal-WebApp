@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.tt1.simwebapp.logica", "com.tt1.simwebapp"})
+@ComponentScan(basePackages = {"com.tt1.simwebapp.services", "com.tt1.simwebapp"})
 public class TrabajoApplication
 {
 

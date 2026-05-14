@@ -1,0 +1,127 @@
+package com.tt1.simwebapp.services;
+
+import com.tt1.simwebapp.model.*;
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.api.DefaultApi;
+import org.openapitools.client.model.SimulationRequestJson;
+import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SimServerClient implements SimServerClientInterface {
+    private static final String LOCALHOST_SIM = "http://localhost:8081";
+    private static final String DOCKERCOMPOSE_SIM = "http://servicio-tt1:8080";
+    private final ApiClient client;
+    private final DefaultErrorAttributes defaultErrorAttributes;
+
+    public SimServerClient(DefaultErrorAttributes defaultErrorAttributes) {
+        client = Configuration.getDefaultApiClient();
+//        client.setBasePath(System.getenv("API_URL"));
+        client.setBasePath(LOCALHOST_SIM);
+//        client.setBasePath(DOCKERCOMPOSE_SIM);
+        this.defaultErrorAttributes = defaultErrorAttributes;
+    }
+
+    @Override
+    public CreaturesResponse getCreatures() {
+        DefaultApi apiInstance = new DefaultApi(client);
+        CreaturesResponse response;
+
+        try {
+            response = Transformer.transformToCreaturesResponse(apiInstance.solicitudGetCriaturasGet());
+        } catch (ApiException apiException) {
+            response = Transformer.transformToCreaturesResponse(apiException);
+        }
+
+        return response;
+    }
+
+    @Override
+    public boolean isCreatureNameValid(String name) {
+        boolean response = false;
+        CreaturesResponse creaturesResponse = getCreatures();
+
+        if (creaturesResponse.problemDetails() == null) {
+            response = creaturesResponse.creatureNames().contains(name);
+        }
+
+        return response;
+    }
+
+    @Override
+    public SimulationRequestResponse requestSimulation(SimulationRequest simulationRequest) {
+        DefaultApi apiInstance = new DefaultApi(client);
+        SimulationRequestResponse response;
+        SimulationRequestJson simulationRequestJson = Transformer.toJson(simulationRequest);
+
+        try {
+            response =
+                    Transformer.transformToSimulationRequestResponse(apiInstance.solicitudSolicitarPost(simulationRequest.user().username(), simulationRequestJson));
+        } catch (ApiException apiException) {
+            response = Transformer.transformToSimulationRequestResponse(apiException);
+        }
+
+        return response;
+    }
+
+    @Override
+    public SimulationStatusResponse getSimulationStatus(Simulation simulation) {
+        DefaultApi apiInstance = new DefaultApi(client);
+        SimulationStatusResponse response;
+
+        try {
+            response =
+                    Transformer.transformToSimulationStatusResponse(apiInstance.solicitudComprobarSolicitudGet(simulation.user().username(), simulation.token()));
+        } catch (ApiException apiException) {
+            response = Transformer.transformToSimulationStatusResponse(apiException);
+        }
+
+        return response;
+    }
+
+    @Override
+    public UserSimulationsResponse getUserSimulations(User user) {
+        DefaultApi apiInstance = new DefaultApi(client);
+        UserSimulationsResponse response;
+
+        try {
+            response =
+                    Transformer.transformToUserSimulationsResponse(apiInstance.solicitudGetSolicitudesUsuarioGet(user.username()));
+        } catch (ApiException apiException) {
+            response = Transformer.transformToUserSimulationsResponse(apiException);
+        }
+
+        return response;
+    }
+
+    @Override
+    public SimulationResultResponse getSimulationResult(Simulation simulation) {
+        DefaultApi apiInstance = new DefaultApi(client);
+        SimulationResultResponse response;
+
+        try {
+            response =
+                    Transformer.transformToSimulationResultResponse(apiInstance.resultadosPost(simulation.user().username(), simulation.token()));
+        } catch (ApiException apiException) {
+            response = Transformer.transformToSimulationResultResponse(apiException);
+        }
+
+        return response;
+    }
+
+    @Override
+    public EmailResponse sendEmail(Email email) {
+        DefaultApi apiInstance = new DefaultApi(client);
+        EmailResponse response;
+
+        try {
+            response = Transformer.transformToEmailResponse(apiInstance.emailPost(email.recipient(), email.message()));
+        } catch (ApiException apiException) {
+            response = Transformer.transformToEmailResponse(apiException);
+        }
+
+        return response;
+    }
+}

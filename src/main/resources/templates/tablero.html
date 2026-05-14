@@ -35,34 +35,41 @@
 		Isla Grid
 	</h2>
 
-	<div class="flex flex-wrap items-center justify-center gap-6 mt-8 mb-10 bg-neolavender neo-border p-6 neo-shadow-sm w-full relative">
-		<h3 class="text-xl font-bold uppercase bg-white inline-block px-3 py-1 neo-border absolute -top-5 left-4">Controles</h3>
-
-		<button id="playBtn" class="neo-btn bg-white px-8 py-3 text-xl hover:bg-neoyellow">▶ Play</button>
-
-		<div class="flex items-center gap-2 bg-white neo-border p-2">
-			<label for="velocity" class="font-bold px-2 uppercase text-lg">Velocidad:</label>
-			<select id="velocity" class="font-bold border-2 border-black p-2 bg-neopink text-white outline-none cursor-pointer text-lg">
-				<option value="1000">0.5x</option>
-				<option value="500" selected>1x</option>
-				<option value="250">2x</option>
-				<option value="100">5x</option>
-			</select>
-		</div>
-
-		<div class="flex items-center gap-4 bg-white neo-border p-3 px-5">
-			<label for="mySlider" class="font-bold uppercase text-lg">Timeline:</label>
-			<input type="range" id="mySlider" min="0" th:max="${maxTime}" value="0" class="w-48 md:w-64">
-			<span id="sliderValue" class="font-bold text-2xl bg-black text-white px-4 py-1 neo-border">0</span>
-		</div>
+	<div th:if="${problemDetails != null}" class="bg-red-400 w-full p-8 neo-border neo-shadow-sm relative mt-8 mb-8 text-center min-h-[150px] flex items-center justify-center">
+		<h3 class="text-xl font-bold mb-4 uppercase bg-black text-white inline-block px-3 py-1 neo-border absolute -top-5 left-4">Error</h3>
+		<span class="text-2xl font-bold text-black" th:text="${problemDetails}">Error details</span>
 	</div>
 
-	<div class="grid-container neo-shadow mb-4" id="gr">
+	<div th:if="${problemDetails == null}" class="w-full flex flex-col items-center">
+		<div class="flex flex-wrap items-center justify-center gap-6 mt-8 mb-10 bg-neolavender neo-border p-6 neo-shadow-sm w-full relative">
+			<h3 class="text-xl font-bold uppercase bg-white inline-block px-3 py-1 neo-border absolute -top-5 left-4">Controles</h3>
+
+			<button id="playBtn" class="neo-btn bg-white px-8 py-3 text-xl hover:bg-neoyellow">▶ Play</button>
+
+			<div class="flex items-center gap-2 bg-white neo-border p-2">
+				<label for="velocity" class="font-bold px-2 uppercase text-lg">Velocidad:</label>
+				<select id="velocity" class="font-bold border-2 border-black p-2 bg-neopink text-white outline-none cursor-pointer text-lg">
+					<option value="1000">0.5x</option>
+					<option value="500" selected>1x</option>
+					<option value="250">2x</option>
+					<option value="100">5x</option>
+				</select>
+			</div>
+
+			<div class="flex items-center gap-4 bg-white neo-border p-3 px-5">
+				<label for="mySlider" class="font-bold uppercase text-lg">Timeline:</label>
+				<input type="range" id="mySlider" min="0" th:max="${maxTime}" value="0" class="w-48 md:w-64">
+				<span id="sliderValue" class="font-bold text-2xl bg-black text-white px-4 py-1 neo-border">0</span>
+			</div>
+		</div>
+
+		<div class="grid-container neo-shadow mb-4" id="gr">
+		</div>
 	</div>
 </div>
 
-<script th:inline="javascript">
-	const count = /*[[${count}]]*/ 3;
+<script th:if="${problemDetails == null}" th:inline="javascript">
+	const gridSize = /*[[${gridSize}]]*/ 3;
 	const colors = /*[[${colors}]]*/ {};
 
 	const slider = document.getElementById("mySlider");
@@ -74,21 +81,21 @@
 
 	function createSquares(){
 		var grid = document.getElementById('gr');
-		for(var y = 0; y < count; y++){
-			for(var x = 0; x < count; x++){
+		for(var y = 0; y < gridSize; y++){
+			for(var x = 0; x < gridSize; x++){
 				var node = document.createElement("div");
 				node.id = x+'-'+y;
 				grid.appendChild(node);
 			}
 		}
-		document.getElementsByClassName('grid-container').item(0).style.gridTemplateColumns = 'repeat('+count+',50px)';
+		document.getElementsByClassName('grid-container').item(0).style.gridTemplateColumns = 'repeat('+gridSize+',50px)';
 	}
 
 	function drawSimulationTick() {
 		sliderDisplay.textContent = slider.value;
 
-		for(var y = 0; y < count; y++){
-			for(var x = 0; x < count; x++){
+		for(var y = 0; y < gridSize; y++){
+			for(var x = 0; x < gridSize; x++){
 				var node = document.getElementById(x+'-'+y);
 				node.style.background = colors[slider.value+'-'+y+'-'+x] ?? 'floralwhite';
 			}
