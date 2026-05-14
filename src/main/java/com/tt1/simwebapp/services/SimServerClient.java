@@ -18,8 +18,8 @@ public class SimServerClient implements SimServerClientInterface {
 
     public SimServerClient(DefaultErrorAttributes defaultErrorAttributes) {
         client = Configuration.getDefaultApiClient();
-//        client.setBasePath(System.getenv("API_URL"));
-        client.setBasePath(LOCALHOST_SIM);
+        client.setBasePath(System.getenv("API_URL"));
+//        client.setBasePath(LOCALHOST_SIM);
 //        client.setBasePath(DOCKERCOMPOSE_SIM);
         this.defaultErrorAttributes = defaultErrorAttributes;
     }
