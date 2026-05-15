@@ -6,6 +6,7 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.api.DefaultApi;
 import org.openapitools.client.model.SimulationRequestJson;
+import org.slf4j.Logger;
 import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,15 @@ public class SimServerClient implements SimServerClientInterface {
     private static final String DOCKERCOMPOSE_SIM = "http://servicio-tt1:8080";
     private final ApiClient client;
     private final DefaultErrorAttributes defaultErrorAttributes;
+    private final Logger simulationLogger;
 
-    public SimServerClient(DefaultErrorAttributes defaultErrorAttributes) {
+    public SimServerClient(DefaultErrorAttributes defaultErrorAttributes, Logger simulationLogger) {
         client = Configuration.getDefaultApiClient();
         client.setBasePath(System.getenv("API_URL"));
 //        client.setBasePath(LOCALHOST_SIM);
 //        client.setBasePath(DOCKERCOMPOSE_SIM);
         this.defaultErrorAttributes = defaultErrorAttributes;
+        this.simulationLogger = simulationLogger;
     }
 
     @Override
@@ -33,6 +36,10 @@ public class SimServerClient implements SimServerClientInterface {
             response = Transformer.transformToCreaturesResponse(apiInstance.solicitudGetCriaturasGet());
         } catch (ApiException apiException) {
             response = Transformer.transformToCreaturesResponse(apiException);
+            simulationLogger.error(apiException.getMessage(), apiException);
+        } catch (RuntimeException runtimeException) {
+            response = Transformer.transformToCreaturesResponse(runtimeException);
+            simulationLogger.error(runtimeException.getMessage(), runtimeException);
         }
 
         return response;
@@ -61,6 +68,10 @@ public class SimServerClient implements SimServerClientInterface {
                     Transformer.transformToSimulationRequestResponse(apiInstance.solicitudSolicitarPost(simulationRequest.user().username(), simulationRequestJson));
         } catch (ApiException apiException) {
             response = Transformer.transformToSimulationRequestResponse(apiException);
+            simulationLogger.debug(apiException.getMessage(), apiException);
+        }  catch (RuntimeException runtimeException) {
+            response = Transformer.transformToSimulationRequestResponse(runtimeException);
+            simulationLogger.error(runtimeException.getMessage(), runtimeException);
         }
 
         return response;
@@ -76,6 +87,10 @@ public class SimServerClient implements SimServerClientInterface {
                     Transformer.transformToSimulationStatusResponse(apiInstance.solicitudComprobarSolicitudGet(simulation.user().username(), simulation.token()));
         } catch (ApiException apiException) {
             response = Transformer.transformToSimulationStatusResponse(apiException);
+            simulationLogger.debug(apiException.getMessage(), apiException);
+        } catch (RuntimeException runtimeException) {
+            response = Transformer.transformToSimulationStatusResponse(runtimeException);
+            simulationLogger.error(runtimeException.getMessage(), runtimeException);
         }
 
         return response;
@@ -91,6 +106,10 @@ public class SimServerClient implements SimServerClientInterface {
                     Transformer.transformToUserSimulationsResponse(apiInstance.solicitudGetSolicitudesUsuarioGet(user.username()));
         } catch (ApiException apiException) {
             response = Transformer.transformToUserSimulationsResponse(apiException);
+            simulationLogger.error(apiException.getMessage(), apiException);
+        } catch (RuntimeException runtimeException) {
+            response = Transformer.transformToUserSimulationsResponse(runtimeException);
+            simulationLogger.error(runtimeException.getMessage(), runtimeException);
         }
 
         return response;
@@ -106,6 +125,10 @@ public class SimServerClient implements SimServerClientInterface {
                     Transformer.transformToSimulationResultResponse(apiInstance.resultadosPost(simulation.user().username(), simulation.token()));
         } catch (ApiException apiException) {
             response = Transformer.transformToSimulationResultResponse(apiException);
+            simulationLogger.debug(apiException.getMessage(), apiException);
+        } catch (RuntimeException runtimeException) {
+            response = Transformer.transformToSimulationResultResponse(runtimeException);
+            simulationLogger.error(runtimeException.getMessage(), runtimeException);
         }
 
         return response;
@@ -120,6 +143,10 @@ public class SimServerClient implements SimServerClientInterface {
             response = Transformer.transformToEmailResponse(apiInstance.emailPost(email.recipient(), email.message()));
         } catch (ApiException apiException) {
             response = Transformer.transformToEmailResponse(apiException);
+            simulationLogger.debug(apiException.getMessage(), apiException);
+        } catch (RuntimeException runtimeException) {
+            response = Transformer.transformToEmailResponse(runtimeException);
+            simulationLogger.error(runtimeException.getMessage(), runtimeException);
         }
 
         return response;
