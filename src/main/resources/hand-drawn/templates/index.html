@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - Simulador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Bienvenido al Simulador</h1>
+        <form action="#" th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="nombreUsuario">¿Cuál es tu nombre?</label>
+                <input type="text" id="nombreUsuario" name="nombreUsuario" required placeholder="Firma aquí...">
+            </div>
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

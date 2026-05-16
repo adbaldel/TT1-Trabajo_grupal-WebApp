@@ -16,6 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
         // Protect all routes except the login endpoints and static resources
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/login", "/css/**", "/js/**");
+                .excludePathPatterns("/", "/login", "/static/css/**", "/js/**");
     }
 }

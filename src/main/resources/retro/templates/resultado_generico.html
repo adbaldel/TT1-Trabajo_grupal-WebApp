@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>System Message</title>
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <style>
+        .system-log {
+            background-color: #000;
+            border: 2px dashed var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="retro-container">
+    <h1>SYSTEM ALERT</h1>
+
+    <div class="system-log">
+        <!-- Renders if there is a success/info message -->
+        <p th:if="${resultado}" class="success-text" th:text="${resultado}"></p>
+
+        <!-- Renders if there is an error message -->
+        <p th:if="${problemDetails}" class="error-text" th:text="${'ERROR: ' + problemDetails}"></p>
+    </div>
+
+    <div style="text-align: center;">
+        <a th:href="@{/home}" class="btn" style="text-decoration: none;">RETURN TO MAIN MENU</a>
+    </div>
+</div>
+</body>
+</html>

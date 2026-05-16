@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SYS.SIM_CONFIG // CYBER_SIM</title>
+    <link rel="stylesheet" th:href="@{/css/cyberpunk.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>[ SIMULATION_CONFIG ]</h1>
+        
+        <div th:if="${problemDetails != null}" class="error-box">
+            <p>ERR_CODE: <span th:text="${problemDetails}"></span></p>
+        </div>
+
+        <form th:action="@{/solicitar}" method="post" th:if="${creatureNames != null}">
+            <div class="form-group" th:each="creature : ${creatureNames}">
+                <label th:for="${creature}" th:text="'Entity: ' + ${creature}"></label>
+                <input type="number" th:id="${creature}" th:name="${creature}" value="0" min="0">
+            </div>
+            
+            <button type="submit" class="btn btn-magenta">EXECUTE_SIMULATION</button>
+            <a th:href="@{/home}" class="btn">ABORT (Home)</a>
+        </form>
+    </div>
+</body>
+</html>

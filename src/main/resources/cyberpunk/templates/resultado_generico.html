@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SYS.OUTPUT // CYBER_SIM</title>
+    <link rel="stylesheet" th:href="@{/css/cyberpunk.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>[ SYSTEM_RESPONSE ]</h1>
+        
+        <div style="padding: 20px; border: 1px dashed var(--neon-cyan); margin-bottom: 20px;">
+            <p style="color: var(--neon-yellow);" th:text="${resultado}"></p>
+        </div>
+
+        <div th:if="${problemDetails != null}" class="error-box">
+            <p>ERR_DETECTED: <span th:text="${problemDetails}"></span></p>
+        </div>
+
+        <a th:href="@{/home}" class="btn btn-magenta">RETURN_TO_HOME</a>
+    </div>
+</body>
+</html>

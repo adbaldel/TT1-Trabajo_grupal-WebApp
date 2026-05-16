@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Configure Sim</title>
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+</head>
+<body>
+<div class="retro-container">
+    <h1>SPAWN ENTITIES</h1>
+
+    <div th:if="${problemDetails}" class="error-box" th:text="${problemDetails}"></div>
+
+    <form th:action="@{/solicitar}" method="post" th:if="${creatureNames != null}">
+        <!-- Iterate over the creature names list -->
+        <div th:each="creature : ${creatureNames}" style="margin-bottom: 10px;">
+            <label th:for="${creature}" th:text="${#strings.toUpperCase(creature)} + ':'"></label>
+            <input type="number" th:id="${creature}" th:name="${creature}" value="0" min="0" />
+        </div>
+        <button type="submit">GENERATE MAP</button>
+    </form>
+</div>
+</body>
+</html>

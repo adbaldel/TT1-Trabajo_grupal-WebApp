@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home - Simulador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <h1>Hola, <span th:text="${nombreUsuario}">Viajero</span>!</h1>
+        <p>¿Qué quieres dibujar hoy?</p>
+        <div class="nav-links">
+            <a th:href="@{/solicitar}" class="btn">Nueva Simulación</a>
+            <a th:href="@{/estado}" class="btn">Ver Estado</a>
+            <a th:href="@{/resultado}" class="btn">Ver Resultado</a>
+            <a th:href="@{/mis-solicitudes}" class="btn">Mis Solicitudes</a>
+            <a th:href="@{/email}" class="btn">Enviar Mensaje</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

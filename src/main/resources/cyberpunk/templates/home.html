@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SYS.HOME // CYBER_SIM</title>
+    <link rel="stylesheet" th:href="@{/css/cyberpunk.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>[ MAINFRAME_ACCESS ]</h1>
+        <p>Welcome, Operator: <span style="color: var(--neon-yellow);" th:text="${nombreUsuario}"></span></p>
+        
+        <div class="nav-links">
+            <a th:href="@{/solicitar}" class="btn">New Simulation</a>
+            <a th:href="@{/estado}" class="btn">Check Status</a>
+            <a th:href="@{/mis-solicitudes}" class="btn">My Tokens</a>
+            <a th:href="@{/resultado}" class="btn btn-magenta">View Results</a>
+            <a th:href="@{/email}" class="btn" style="grid-column: span 2;">COMMS (Email)</a>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a th:href="@{/logout}" class="btn" style="border-color: red; color: red;">[ Terminate Session ]</a>
+        </div>
+    </div>
+</body>
+</html>

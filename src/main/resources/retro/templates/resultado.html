@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Load Board</title>
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+</head>
+<body>
+<div class="retro-container">
+    <h1>LOAD BOARD</h1>
+
+    <div th:if="${problemDetails}" class="error-text" th:text="${problemDetails}"></div>
+
+    <form th:action="@{/resultado}" method="post">
+        <label for="token">ENTER TOKEN ID:</label>
+        <input type="number" id="token" name="token" required min="1" placeholder="e.g. 12345" />
+
+        <button type="submit">INITIALIZE BOARD</button>
+        <a th:href="@{/home}" class="btn" style="display: inline-block; text-decoration: none; margin-left: 10px;">BACK</a>
+    </form>
+</div>
+</body>
+</html>

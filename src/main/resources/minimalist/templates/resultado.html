@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch Results</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="container">
+        <h2>Load Simulation Board</h2>
+        <p>Enter the token of a <strong>FINISHED</strong> simulation to visualize the data.</p>
+
+        <form th:action="@{/resultado}" method="post">
+            <div class="form-group">
+                <label for="token">Simulation Token (ID)</label>
+                <input type="number" id="token" name="token" required placeholder="e.g. 12345">
+            </div>
+            <button type="submit">Visualize Board</button>
+        </form>
+         <div class="nav-links" style="margin-top: 1rem;">
+             <a th:href="@{/home}" style="border-color: transparent; background: transparent; color: var(--text-muted);">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

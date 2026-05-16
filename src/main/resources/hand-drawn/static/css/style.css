@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Schoolbell&display=swap');
+
+:root {
+    --bg-color: #fdfbf7; /* Paper off-white */
+    --ink-color: #2c3e50; /* Dark pen ink */
+    --accent-color: #e74c3c; /* Red pen accent */
+    --highlight: #f1c40f; /* Marker highlight */
+
+    /* The magic to make boxes look hand-drawn */
+    --drawn-border: 2px solid var(--ink-color);
+    --drawn-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+body {
+    font-family: 'Patrick Hand', cursive;
+    background-color: var(--bg-color);
+    color: var(--ink-color);
+    background-image:
+            linear-gradient(rgba(44, 62, 80, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(44, 62, 80, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+}
+
+h1, h2, h3 {
+    font-family: 'Schoolbell', cursive;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+h1 { font-size: 2.5rem; text-decoration: underline wavy var(--accent-color); }
+
+.card {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: var(--drawn-border);
+    border-radius: var(--drawn-radius);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+}
+
+.error {
+    background-color: #ffcccb;
+    padding: 10px;
+    border: 2px dashed var(--accent-color);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+/* Forms */
+.form-group { margin-bottom: 1.5rem; }
+label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+
+input[type="text"], input[type="number"], input[type="email"], textarea, select {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.2rem;
+    background: transparent;
+    border: var(--drawn-border);
+    border-radius: 15px 225px 15px 255px/255px 15px 225px 15px;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    box-shadow: 2px 2px 0px var(--highlight);
+    background-color: rgba(241, 196, 15, 0.1);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--highlight);
+    color: var(--ink-color);
+    text-decoration: none;
+    font-family: 'Schoolbell', cursive;
+    font-size: 1.2rem;
+    border: var(--drawn-border);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px var(--ink-color);
+    transition: all 0.1s;
+    text-align: center;
+}
+
+.btn:hover { background-color: #f39c12; }
+.btn:active { box-shadow: 1px 1px 0px var(--ink-color); transform: translate(3px, 3px); }
+
+/* Navigation */
+.nav-links { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+/* Simulation Board Layout */
+.controls-panel {
+    display: flex; gap: 10px; align-items: center; justify-content: center;
+    margin-bottom: 20px; flex-wrap: wrap;
+}
+
+.board-container {
+    display: flex; justify-content: center; margin-top: 20px;
+}
+
+.board {
+    display: grid;
+    gap: 2px;
+    background-color: var(--ink-color);
+    border: var(--drawn-border);
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.cell {
+    background-color: white;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold;
+    border-radius: 3px;
+}
+
+.legend {
+    display: flex; gap: 15px; justify-content: center;
+    margin-top: 20px; flex-wrap: wrap;
+}
+
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-color { width: 20px; height: 20px; border: var(--drawn-border); border-radius: 50%; }
+
+.slider-container { width: 100%; text-align: center; margin-top: 15px; }
+input[type="range"] { width: 80%; cursor: pointer; }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Simulation Hub</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Dashboard</h1>
+    <p>Welcome back, <strong th:text="${nombreUsuario}">User</strong>.</p>
+
+    <div class="nav-links">
+        <a th:href="@{/solicitar}">Start New Simulation</a>
+        <a th:href="@{/estado}">Check Status</a>
+        <a th:href="@{/mis-solicitudes}">My Requests</a>
+        <a th:href="@{/resultado}">View Results Board</a>
+        <a th:href="@{/email}">Send Email</a>
+    </div>
+</div>
+</body>
+</html>

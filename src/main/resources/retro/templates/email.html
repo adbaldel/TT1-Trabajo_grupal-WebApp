@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Send Report</title>
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+</head>
+<body>
+<div class="retro-container">
+    <h1>TRANSMISSION</h1>
+
+    <div th:if="${problemDetails}" class="error-text" th:text="${problemDetails}"></div>
+
+    <form th:action="@{/email}" method="post">
+        <label for="email">TARGET INBOX:</label>
+        <input type="email" id="email" name="email" required placeholder="player@arcade.com" />
+
+        <label for="mensaje">PAYLOAD:</label>
+        <textarea id="mensaje" name="mensaje" required placeholder="Enter message data..."></textarea>
+
+        <button type="submit">SEND TRANSMISSION</button>
+        <a th:href="@{/home}" class="btn" style="display: inline-block; text-decoration: none; margin-left: 10px;">ABORT</a>
+    </form>
+</div>
+</body>
+</html>

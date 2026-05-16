@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Main Menu</title>
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <style>
+        .menu-grid { display: grid; gap: 15px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="retro-container">
+    <h1>MAIN MENU</h1>
+    <p>WELCOME, <span style="color: var(--accent-color);" th:text="${nombreUsuario}">PLAYER1</span></p>
+
+    <div class="menu-grid">
+        <a th:href="@{/solicitar}" class="btn">NEW SIMULATION</a>
+        <a th:href="@{/estado}" class="btn">CHECK STATUS</a>
+        <a th:href="@{/resultado}" class="btn">VIEW BOARD</a>
+        <a th:href="@{/mis-solicitudes}" class="btn">MY SIMULATIONS</a>
+        <a th:href="@{/email}" class="btn">SEND REPORT</a>
+    </div>
+</div>
+</body>
+</html>

@@ -43,7 +43,7 @@ public class WebController {
     @GetMapping("/home")
     public String home(HttpSession session, Model model) {
         model.addAttribute("nombreUsuario", session.getAttribute("nombreUsuario"));
-        return "home"; // Old index.html content
+        return "home";
     }
 
     // --- 1. Solicitar Simulación ---
@@ -87,7 +87,7 @@ public class WebController {
     public String estadosPost(@RequestParam int token, HttpSession session, Model model) {
         String username = (String) session.getAttribute("nombreUsuario");
         SimulationStatusResponse response =
-                simServerClient.getSimulationStatus(new Simulation(token, new User(username)));
+                simServerClient.getSimulationStatus(new Simulation(new User(username), token));
 
         model.addAttribute("resultado", "Estado de la simulación: " + response.status());
         model.addAttribute("problemDetails", response.problemDetails());
@@ -116,21 +116,21 @@ public class WebController {
     @PostMapping("/resultado")
     public String resultadoPost(@RequestParam int token, HttpSession session, Model model) {
         String username = (String) session.getAttribute("nombreUsuario");
-        SimulationResultResponse response = simServerClient.getSimulationResult(new Simulation(token, new User(username)));
+        SimulationResultResponse response = simServerClient.getSimulationResult(new Simulation(new User(username), token));
 
         model.addAttribute("gridSize", response.gridSize());
         if (response.problemDetails() == null) {
-            model.addAttribute("maxTime", response.simulationData().size());
-            Map<String, String> colors = new HashMap<>();
-            for (Map.Entry<Integer, List<ColorPoint>> entry : response.simulationData().entrySet()) {
-                for (ColorPoint colorPoint : entry.getValue()) {
-                    colors.put(entry.getKey() + "-" + colorPoint.x() + "-" + colorPoint.y(), colorPoint.color());
+            model.addAttribute("maxTime", response.simulationData().size()-1);
+            Map<String, String> creatures = new HashMap<>();
+            for (Map.Entry<Integer, List<CreaturePoint>> entry : response.simulationData().entrySet()) {
+                for (CreaturePoint creaturePoint : entry.getValue()) {
+                    creatures.put(entry.getKey() + "-" + creaturePoint.x() + "-" + creaturePoint.y(), creaturePoint.name());
                 }
             }
-            model.addAttribute("colors", colors);
+            model.addAttribute("creatures", creatures);
         } else {
             model.addAttribute("maxTime", -1);
-            model.addAttribute("colors", null);
+            model.addAttribute("creatures", null);
         }
         model.addAttribute("problemDetails", response.problemDetails());
 

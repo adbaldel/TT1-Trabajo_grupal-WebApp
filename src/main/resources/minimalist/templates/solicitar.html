@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Simulation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="container">
+        <h2>Configure Simulation</h2>
+        <p>Set the initial population quantities for your environment.</p>
+
+        <div th:if="${problemDetails != null}" class="error-box" th:text="${problemDetails}"></div>
+
+        <form th:action="@{/solicitar}" method="post" th:if="${creatureNames != null}">
+            <div class="form-group" th:each="creature : ${creatureNames}">
+                <label th:for="${creature}" th:text="${#strings.capitalize(creature)}">Creature Name</label>
+                <input type="number" th:id="${creature}" th:name="${creature}" value="0" min="0" required>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit">Initialize Simulation</button>
+                <a th:href="@{/home}" style="text-decoration: none; width: 100%;">
+                    <button type="button" class="secondary">Cancel</button>
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

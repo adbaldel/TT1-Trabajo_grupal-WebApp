@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Aviso</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <h1>Mensaje del Sistema</h1>
+
+        <div class="error" th:if="${problemDetails != null}">
+            <p th:text="${problemDetails}"></p>
+        </div>
+
+        <p th:if="${resultado != null}" th:text="${resultado}" style="font-size: 1.5rem;"></p>
+
+        <br><br>
+        <a th:href="@{/home}" class="btn">Volver al Inicio</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Configurar Simulación</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Nueva Simulación</h1>
+        <div class="error" th:if="${problemDetails != null}">
+            <p th:text="${problemDetails}">Error details</p>
+        </div>
+
+        <form action="#" th:action="@{/solicitar}" method="post" th:if="${creatureNames != null}">
+            <p>Ingresa la cantidad para cada criatura:</p>
+            <div class="form-group" th:each="creature : ${creatureNames}">
+                <label th:for="${creature}" th:text="${creature}">Creature</label>
+                <input type="number" th:id="${creature}" th:name="${creature}" value="0" min="0">
+            </div>
+            <button type="submit" class="btn">Crear Mundo</button>
+            <a th:href="@{/home}" class="btn" style="background-color: transparent;">Cancelar</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

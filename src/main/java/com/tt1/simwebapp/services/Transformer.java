@@ -115,12 +115,7 @@ public class Transformer {
     public static UserSimulationsResponse transformToUserSimulationsResponse(List<Integer> tokens) {
         UserSimulationsResponse userSimulationsResponse;
 
-        List<String> tokensString = new ArrayList<>();
-        for (Integer token : tokens) {
-            tokensString.add(String.valueOf(token));
-        }
-
-        userSimulationsResponse = new UserSimulationsResponse(tokensString, null);
+        userSimulationsResponse = new UserSimulationsResponse(tokens, null);
 
         return userSimulationsResponse;
     }
@@ -149,7 +144,7 @@ public class Transformer {
         String data = simulationResultResponseJson.getData();
         if (data == null || data.isEmpty()) return null;
 
-        Map<Integer, List<ColorPoint>> colorPoints = new HashMap<>();
+        Map<Integer, List<CreaturePoint>> colorPoints = new HashMap<>();
         String[] dataLines = data.split("\n");
         int gridSize = Integer.parseInt(dataLines[0].trim());
 
@@ -161,10 +156,10 @@ public class Transformer {
 
             int x = Integer.parseInt(lineData[1].trim());
             int y = Integer.parseInt(lineData[2].trim());
-            String color = lineData[3].trim();
-            ColorPoint colorPoint = new ColorPoint(x, y, color);
+            String name = lineData[3].trim();
+            CreaturePoint creaturePoint = new CreaturePoint(name, x, y);
 
-            colorPoints.computeIfAbsent(sec, k -> new ArrayList<>()).add(colorPoint);
+            colorPoints.computeIfAbsent(sec, k -> new ArrayList<>()).add(creaturePoint);
         }
 
         simulationResultResponse = new SimulationResultResponse(gridSize, colorPoints, null);
@@ -193,7 +188,7 @@ public class Transformer {
     public static EmailResponse transformToEmailResponse(EmailResponseJson emailResponseJson) {
         EmailResponse emailResponse;
 
-        emailResponse = new EmailResponse(emailResponseJson.getDone() ? "El email ha sido enviado" : "No se ha " +
+        emailResponse = new EmailResponse(Boolean.TRUE.equals(emailResponseJson.getDone()) ? "El email ha sido enviado" : "No se ha " +
                                                                                                      "podido" + " " + "enviar el " + "email", null);
 
         return emailResponse;
@@ -220,11 +215,17 @@ public class Transformer {
     private static String createProblemDetails(ApiException apiException) {
         int titleIndex = 7;
         int detailIndex = 13;
+
+        if (apiException.getResponseBody() == null || apiException.getResponseBody().isEmpty()) {
+            return String.format("HTTP Status Code %d.\n%s.", apiException.getCode(), apiException.getMessage());
+        }
+
         String[] reasonSplit = apiException.getResponseBody().split("\"");
         String errorMessage;
 
         if (reasonSplit.length <= detailIndex) {
-            errorMessage = String.format("HTTP Status Code %d: %s.", apiException.getCode(), apiException.getMessage());
+            errorMessage = String.format("HTTP Status Code %d.\n%s.", apiException.getCode(),
+                    apiException.getMessage());
         } else {
             String reasonTitle = reasonSplit[titleIndex];
             String reasonDetail = reasonSplit[detailIndex];

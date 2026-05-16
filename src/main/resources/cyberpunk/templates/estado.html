@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SYS.STATUS // CYBER_SIM</title>
+    <link rel="stylesheet" th:href="@{/css/cyberpunk.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>[ QUERY_STATUS ]</h1>
+        <form th:action="@{/estado}" method="post">
+            <div class="form-group">
+                <label for="token">Input Simulation Token</label>
+                <input type="number" id="token" name="token" required>
+            </div>
+            <button type="submit" class="btn">PING_SERVER</button>
+            <a th:href="@{/home}" class="btn">BACK</a>
+        </form>
+    </div>
+</body>
+</html>

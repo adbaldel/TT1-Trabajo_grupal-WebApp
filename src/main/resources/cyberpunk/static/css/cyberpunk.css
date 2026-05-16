@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --bg-color: #050505;
+    --panel-bg: rgba(10, 10, 15, 0.85);
+    --neon-cyan: #00f3ff;
+    --neon-magenta: #ff00ff;
+    --neon-yellow: #fcee0a;
+    --neon-green: #39ff14;
+    --text-main: #e0e0e0;
+    --font-header: 'Orbitron', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-header);
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+.container {
+    background: var(--panel-bg);
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.1);
+    padding: 30px;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px;
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(45deg, var(--neon-cyan), var(--neon-magenta));
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(10px);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: 10px;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    box-shadow: 0 0 10px var(--neon-cyan);
+    background: rgba(0, 243, 255, 0.1);
+}
+
+.btn {
+    background: transparent;
+    color: var(--neon-cyan);
+    border: 1px solid var(--neon-cyan);
+    padding: 10px 20px;
+    font-family: var(--font-header);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover {
+    background: var(--neon-cyan);
+    color: var(--bg-color);
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.btn-magenta { border-color: var(--neon-magenta); color: var(--neon-magenta); }
+.btn-magenta:hover { background: var(--neon-magenta); color: var(--bg-color); box-shadow: 0 0 15px var(--neon-magenta); }
+
+.nav-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.error-box {
+    border: 1px solid red;
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff4444;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px red;
+}
+
+/* Tablero specific styles */
+#sim-board {
+    display: grid;
+    gap: 2px;
+    margin: 20px auto;
+    background: #111;
+    border: 2px solid var(--neon-magenta);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    width: max-content; /* THIS PREVENTS THE STRETCHING */
+    margin-left: auto;  /* Keeps it centered */
+    margin-right: auto; /* Keeps it centered */}
+
+.cell {
+    background: #000;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: #000;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.slider-container {
+    width: 100%;
+    margin: 10px 0;
+}
+input[type=range] { width: 100%; accent-color: var(--neon-cyan); }

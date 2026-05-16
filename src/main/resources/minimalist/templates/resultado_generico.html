@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System Notification</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="container">
+        <h2>System Response</h2>
+        
+        <div th:if="${problemDetails != null}" class="error-box" th:text="${problemDetails}"></div>
+        
+        <div th:if="${resultado != null}" class="form-group" style="background: #f8fbff; border: 1px solid #cce0ff; padding: 1.5rem; border-radius: 8px;">
+            <p style="margin: 0; color: #2b2d42; font-family: monospace; font-size: 1.1rem;" th:text="${resultado}"></p>
+        </div>
+
+        <div class="nav-links" style="margin-top: 2rem;">
+            <a th:href="@{/home}">Return to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

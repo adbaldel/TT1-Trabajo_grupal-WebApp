@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SYS.MATRIX_VIEW // CYBER_SIM</title>
+    <link rel="stylesheet" th:href="@{/css/cyberpunk.css}">
+    <style>
+        .container { max-width: 900px; }
+        .legend { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 10px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; text-transform: uppercase; }
+        .color-box { width: 15px; height: 15px; border: 1px solid #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>[ MATRIX_VISUALIZER ]</h1>
+        
+        <div th:if="${problemDetails != null}" class="error-box">
+            <p>FATAL_ERROR: <span th:text="${problemDetails}"></span></p>
+            <a th:href="@{/home}" class="btn">RETURN</a>
+        </div>
+
+        <div th:if="${problemDetails == null}">
+            <div class="controls">
+                <button id="btn-prev" class="btn">< Prev</button>
+                <button id="btn-play" class="btn btn-magenta">Play</button>
+                <button id="btn-pause" class="btn">Pause</button>
+                <button id="btn-next" class="btn">Next ></button>
+                
+                <select id="speed-selector" class="btn">
+                    <option value="2000">Speed: 0.25x</option>
+                    <option value="1000">Speed: 0.5x</option>
+                    <option value="500" selected>Speed: 1x</option>
+                    <option value="250">Speed: 2x</option>
+                    <option value="125">Speed: 4x</option>
+                    <option value="50">Speed: Max</option>
+                </select>
+                <a th:href="@{/home}" class="btn">Exit</a>
+            </div>
+
+            <div class="slider-container">
+                <label>Timeline T=<span id="time-display">0</span></label>
+                <input type="range" id="timeline" min="0" th:max="${maxTime}" value="0">
+            </div>
+
+            <div class="legend" id="legend-container"></div>
+            
+            <div id="sim-board"></div>
+        </div>
+    </div>
+
+    <script th:inline="javascript" th:if="${problemDetails == null}">
+        // Data Injected from Thymeleaf
+        const gridSize = /*[[${gridSize}]]*/ 10;
+        const maxTime = /*[[${maxTime}]]*/ 10;
+        const creaturesData = /*[[${creatures}]]*/ {};
+
+        // Cyberpunk Color Palette for creatures
+        const palette = ['#00f3ff', '#ff00ff', '#39ff14', '#fcee0a', '#ff4444', '#ffffff'];
+        const creatureColors = {};
+        let colorIdx = 0;
+
+        // Auto-assign colors to unique creatures
+        Object.values(creaturesData).forEach(name => {
+            if (!creatureColors[name]) {
+                creatureColors[name] = palette[colorIdx % palette.length];
+                colorIdx++;
+            }
+        });
+
+        // Build Legend
+        const legendContainer = document.getElementById('legend-container');
+        Object.keys(creatureColors).forEach(name => {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.innerHTML = `<div class="color-box" style="background:${creatureColors[name]}; box-shadow: 0 0 5px ${creatureColors[name]}"></div> <span>${name}</span>`;
+            legendContainer.appendChild(item);
+        });
+
+        // Initialize Board Grid
+        const board = document.getElementById('sim-board');
+        board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        const cells = {};
+
+        for (let y = 0; y < gridSize; y++) {
+            for (let x = 0; x < gridSize; x++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                board.appendChild(cell);
+                cells[`${x}-${y}`] = cell; // Map to easily find by coordinates
+            }
+        }
+
+        // Playback State
+        let currentFrame = 0;
+        let intervalId = null;
+        let playbackSpeed = 1000;
+
+        // UI Elements
+        const displayTime = document.getElementById('time-display');
+        const slider = document.getElementById('timeline');
+        const speedSel = document.getElementById('speed-selector');
+
+        function renderFrame(time) {
+            // Clear board
+            Object.values(cells).forEach(c => {
+                c.style.background = '#000';
+                c.style.boxShadow = 'none';
+                c.innerText = '';
+            });
+
+            // Draw creatures for current Time
+            for (let x = 0; x < gridSize; x++) {
+                for (let y = 0; y < gridSize; y++) {
+                    const key = `${time}-${x}-${y}`;
+                    const creatureName = creaturesData[key];
+                    if (creatureName) {
+                        const targetCell = cells[`${x}-${y}`];
+                        const color = creatureColors[creatureName];
+                        targetCell.style.background = color;
+                        targetCell.style.boxShadow = `0 0 10px ${color}`;
+                        // targetCell.innerText = creatureName.charAt(0).toUpperCase(); // Show first letter
+                    }
+                }
+            }
+            displayTime.innerText = time;
+            slider.value = time;
+            currentFrame = time;
+        }
+
+        function play() {
+            if (intervalId) return; // already playing
+            intervalId = setInterval(() => {
+                if (currentFrame >= maxTime) {
+                    pause();
+                    return;
+                }
+                renderFrame(currentFrame + 1);
+            }, playbackSpeed);
+        }
+
+        function pause() {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('btn-play').addEventListener('click', play);
+        document.getElementById('btn-pause').addEventListener('click', pause);
+        
+        document.getElementById('btn-next').addEventListener('click', () => {
+            pause();
+            if (currentFrame < maxTime) renderFrame(currentFrame + 1);
+        });
+        
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            pause();
+            if (currentFrame > 0) renderFrame(currentFrame - 1);
+        });
+
+        slider.addEventListener('input', (e) => {
+            pause();
+            renderFrame(parseInt(e.target.value));
+        });
+
+        speedSel.addEventListener('change', (e) => {
+            playbackSpeed = parseInt(e.target.value);
+            if (intervalId) {
+                pause();
+                play(); // restart with new speed
+            }
+        });
+
+        // Init Frame 0
+        renderFrame(0);
+    </script>
+</body>
+</html>

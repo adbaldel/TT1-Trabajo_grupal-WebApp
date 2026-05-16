@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Simulation Hub</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Welcome</h1>
+    <p>Please enter your username to access the system.</p>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="nombreUsuario">Username</label>
+            <input type="text" id="nombreUsuario" name="nombreUsuario" required placeholder="e.g. researcher_01">
+        </div>
+        <button type="submit">Log In</button>
+    </form>
+</div>
+</body>
+</html>

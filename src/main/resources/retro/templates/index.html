@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Arcade Login</title>
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+</head>
+<body>
+<div class="retro-container">
+    <h1>Insert Coin</h1>
+    <form th:action="@{/login}" method="post">
+        <label for="nombreUsuario">PLAYER NAME:</label>
+        <input type="text" id="nombreUsuario" name="nombreUsuario" required autocomplete="off" />
+        <button type="submit">START GAME</button>
+    </form>
+</div>
+</body>
+</html>

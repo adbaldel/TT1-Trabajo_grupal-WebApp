@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tablero de Simulación</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card" th:if="${gridSize == -1}">
+        <h1>Error de Simulación</h1>
+        <p class="error" th:text="${problemDetails}">Error.</p>
+        <a th:href="@{/home}" class="btn">Volver</a>
+    </div>
+
+    <div class="card" th:if="${gridSize != -1}">
+        <h1>El Tablero Mágico</h1>
+        <p style="text-align: center;">Tiempo: <span id="timeDisplay">0</span> / <span th:text="${maxTime}"></span></p>
+
+        <div class="controls-panel">
+            <button class="btn" onclick="prevFrame()">&#9664; Atrás</button>
+            <button class="btn" id="playBtn" onclick="togglePlay()">&#9658; Play</button>
+            <button class="btn" onclick="nextFrame()">Adelante &#9654;</button>
+
+            <select id="speedSelect" onchange="changeSpeed()" style="width: auto; margin-left: 10px;">
+                <option value="2000">Muy lento(2s)</option>
+                <option value="1000">Lento (1s)</option>
+                <option value="500" selected>Normal (0.5s)</option>
+                <option value="250">Rápido (0.25s)</option>
+                <option value="125">Muy Rápido (0.125s)</option>
+                <option value="50">Ulta (0.05s)</option>
+            </select>
+        </div>
+
+        <div class="slider-container">
+            <input type="range" id="timeSlider" min="0" th:max="${maxTime}" value="0" oninput="scrubTime(this.value)">
+        </div>
+
+        <div class="board-container">
+            <!-- Grid style generated dynamically via JS based on gridSize -->
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="legend" id="legend">
+            <!-- Populated by JS -->
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a th:href="@{/home}" class="btn" style="background-color: transparent;">Salir</a>
+        </div>
+    </div>
+</div>
+
+<!-- Injecting Thymeleaf attributes directly into JavaScript -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const gridSize = /*[[${gridSize}]]*/ -1;
+    const maxTime = /*[[${maxTime}]]*/ 0;
+    const creaturesMap = /*[[${creatures}]]*/ {};
+    /*]]>*/
+
+    if(gridSize > 0) {
+        let currentFrame = 0;
+        let isPlaying = false;
+        let intervalId = null;
+        let playSpeed = 500;
+
+        // Generate a distinct color palette
+        const colorPalette = ["#ff9ff3", "#feca57", "#ff6b6b", "#48dbfb", "#1dd1a1", "#c8d6e5", "#5f27cd", "#01a3a4"];
+        const speciesColors = {};
+
+        // Elements
+        const boardEl = document.getElementById('board');
+        const legendEl = document.getElementById('legend');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const timeSlider = document.getElementById('timeSlider');
+        const playBtn = document.getElementById('playBtn');
+
+        function initBoard() {
+            // Set CSS Grid columns
+            boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+            // Create cells
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `cell-${x}-${y}`;
+                    boardEl.appendChild(cell);
+                }
+            }
+        }
+
+        function extractSpeciesAndLegend() {
+            let uniqueSpecies = new Set();
+            for (let key in creaturesMap) {
+                uniqueSpecies.add(creaturesMap[key]);
+            }
+
+            let colorIndex = 0;
+            uniqueSpecies.forEach(species => {
+                let color = colorPalette[colorIndex % colorPalette.length];
+                speciesColors[species] = color;
+                colorIndex++;
+
+                // Add to legend UI
+                let legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                legendItem.innerHTML = `<div class="legend-color" style="background-color: ${color};"></div> <span>${species}</span>`;
+                legendEl.appendChild(legendItem);
+            });
+        }
+
+        function renderFrame(time) {
+            // Clear board
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.style.backgroundColor = 'white';
+                cell.innerText = '';
+            });
+
+            // Draw creatures for this time
+            for (let x = 0; x < gridSize; x++) {
+                for (let y = 0; y < gridSize; y++) {
+                    let key = `${time}-${x}-${y}`;
+                    if (creaturesMap[key]) {
+                        let species = creaturesMap[key];
+                        let cell = document.getElementById(`cell-${x}-${y}`);
+                        cell.style.backgroundColor = speciesColors[species];
+                        // Optional: add first letter of creature inside cell
+                        cell.innerText = species.charAt(0).toUpperCase();
+                    }
+                }
+            }
+
+            // Update UI indicators
+            timeDisplay.innerText = time;
+            timeSlider.value = time;
+            currentFrame = time;
+        }
+
+        function playLoop() {
+            if (currentFrame >= maxTime) {
+                togglePlay(); // Auto-stop at end
+                return;
+            }
+            currentFrame++;
+            renderFrame(currentFrame);
+        }
+
+        // Controls
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                if (currentFrame >= maxTime) currentFrame = 0; // Reset if at end
+                playBtn.innerHTML = '&#10074;&#10074; Pause';
+                intervalId = setInterval(playLoop, playSpeed);
+            } else {
+                playBtn.innerHTML = '&#9658; Play';
+                clearInterval(intervalId);
+            }
+        }
+
+        function changeSpeed() {
+            const speedSelect = document.getElementById('speedSelect');
+            playSpeed = parseInt(speedSelect.value);
+            if (isPlaying) {
+                clearInterval(intervalId);
+                intervalId = setInterval(playLoop, playSpeed);
+            }
+        }
+
+        function prevFrame() {
+            if (currentFrame > 0) renderFrame(currentFrame - 1);
+        }
+
+        function nextFrame() {
+            if (currentFrame < maxTime) renderFrame(currentFrame + 1);
+        }
+
+        function scrubTime(value) {
+            renderFrame(parseInt(value));
+        }
+
+        // Startup
+        initBoard();
+        extractSpeciesAndLegend();
+        renderFrame(0);
+    }
+</script>
+</body>
+</html>

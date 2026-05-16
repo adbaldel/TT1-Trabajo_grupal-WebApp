@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Status</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="container">
+        <h2>Simulation Status</h2>
+        <p>Enter your simulation token to retrieve its current processing state.</p>
+
+        <form th:action="@{/estado}" method="post">
+            <div class="form-group">
+                <label for="token">Simulation Token (ID)</label>
+                <input type="number" id="token" name="token" required placeholder="e.g. 12345">
+            </div>
+            <button type="submit">Check Status</button>
+        </form>
+        <div class="nav-links" style="margin-top: 1rem;">
+             <a th:href="@{/home}" style="border-color: transparent; background: transparent; color: var(--text-muted);">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
