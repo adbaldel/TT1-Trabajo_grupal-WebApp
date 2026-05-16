@@ -13,16 +13,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class SimServerClient implements SimServerClientInterface {
     private static final String LOCALHOST_SIM = "http://localhost:8081";
-    private static final String DOCKERCOMPOSE_SIM = "http://servicio-tt1:8080";
     private final ApiClient client;
     private final DefaultErrorAttributes defaultErrorAttributes;
     private final Logger simulationLogger;
 
     public SimServerClient(DefaultErrorAttributes defaultErrorAttributes, Logger simulationLogger) {
         client = Configuration.getDefaultApiClient();
-        client.setBasePath(System.getenv("API_URL"));
-//        client.setBasePath(LOCALHOST_SIM);
-//        client.setBasePath(DOCKERCOMPOSE_SIM);
+        String apiUrl = System.getenv("SIM_API_URL");
+        if (apiUrl == null) {
+            apiUrl = LOCALHOST_SIM;
+        }
+        client.setBasePath(apiUrl);
         this.defaultErrorAttributes = defaultErrorAttributes;
         this.simulationLogger = simulationLogger;
     }
