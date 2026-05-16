@@ -19,7 +19,7 @@ public class SimServerClient implements SimServerClientInterface {
 
     public SimServerClient(DefaultErrorAttributes defaultErrorAttributes, Logger simulationLogger) {
         client = Configuration.getDefaultApiClient();
-        String apiUrl = System.getenv("SIM_API_URL");
+        String apiUrl = System.getenv("API_URL");
         if (apiUrl == null) {
             apiUrl = LOCALHOST_SIM;
         }
