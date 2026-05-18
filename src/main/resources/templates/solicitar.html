@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Request Simulation</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Configurar Simulación</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Configure Run</h1>
-
-<div th:if="${problemDetails != null}" class="error-banner">
-    <p th:text="${problemDetails}">Error details</p>
-</div>
-
-<div class="neo-box" style="width: 500px;" th:if="${problemDetails == null}">
-    <form th:action="@{/solicitar}" method="post">
-        <h3 style="margin-top:0;">Add Creatures</h3>
-
-        <div th:each="creature : ${creatureNames}" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
-            <label th:for="${creature}" th:text="${creature}" style="font-weight: 800; text-transform: capitalize;"></label>
-            <input type="number" th:id="${creature}" th:name="${creature}" class="neo-input" value="0" min="0" style="width: 100px; margin-bottom: 0;" />
+<div class="container">
+    <div class="card">
+        <h1>Nueva Simulación</h1>
+        <div class="error" th:if="${problemDetails != null}">
+            <p th:text="${problemDetails}">Error details</p>
         </div>
 
-        <button type="submit" class="neo-button" style="width: 100%; margin-top: 20px;">LAUNCH SIMULATION</button>
-    </form>
+        <form action="#" th:action="@{/solicitar}" method="post" th:if="${creatureNames != null}">
+            <p>Ingresa la cantidad para cada criatura:</p>
+            <div class="form-group" th:each="creature : ${creatureNames}">
+                <label th:for="${creature}" th:text="${creature}">Creature</label>
+                <input type="number" th:id="${creature}" th:name="${creature}" value="0" min="0">
+            </div>
+            <button type="submit" class="btn">Crear Mundo</button>
+            <a th:href="@{/home}" class="btn" style="background-color: transparent;">Cancelar</a>
+        </form>
+    </div>
 </div>
-
-<a th:href="@{/home}" class="neo-button" style="background-color: white;">← Back</a>
-
 </body>
 </html>

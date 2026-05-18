@@ -1,35 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Send Email - SimWebApp</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <style>
-        /* Small tweak to make the text area resize nicely in Neobrutalism */
-        textarea.neo-input {
-            resize: vertical;
-            min-height: 120px;
-        }
-    </style>
+    <title>Enviar Correo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Comms System</h1>
-
-<div class="neo-box" style="width: 500px; max-width: 100%; background-color: var(--accent-pink);">
-    <h2 style="margin-top:0;">Send Report</h2>
-    <form th:action="@{/email}" method="post">
-
-        <label for="email"><b>Recipient Email:</b></label>
-        <input type="email" id="email" name="email" class="neo-input" placeholder="user@domain.com" required />
-
-        <label for="mensaje"><b>Message Body:</b></label>
-        <textarea id="mensaje" name="mensaje" class="neo-input" placeholder="Write your simulation report here..." required></textarea>
-
-        <button type="submit" class="neo-button" style="width: 100%; background-color: var(--accent-yellow);">DISPATCH MESSAGE</button>
-    </form>
+<div class="container">
+    <div class="card">
+        <h1>Escribir una Carta</h1>
+        <form action="#" th:action="@{/email}" method="post">
+            <div class="form-group">
+                <label for="email">Destinatario (Email):</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="mensaje">Tu Mensaje:</label>
+                <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn">Enviar Paloma Mensajera</button>
+            <a th:href="@{/home}" class="btn" style="background-color: transparent;">Cancelar</a>
+        </form>
+    </div>
 </div>
-
-<a th:href="@{/home}" class="neo-button">← Back to Home</a>
-
 </body>
 </html>

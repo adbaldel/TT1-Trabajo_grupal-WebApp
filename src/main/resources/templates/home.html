@@ -1,48 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home - SimWebApp</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <style>
-        .grid-menu {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            width: 800px;
-            max-width: 100%;
-        }
-        .menu-card {
-            background-color: var(--accent-blue);
-            text-align: center;
-        }
-        .menu-card:nth-child(even) { background-color: var(--accent-green); }
-    </style>
+    <title>Home - Simulador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Welcome, <span th:text="${nombreUsuario}" style="background: var(--accent-yellow); padding: 0 10px; border: 4px solid #111;">USER</span></h1>
-
-<div class="grid-menu">
-    <div class="neo-box menu-card">
-        <h3>New Simulation</h3>
-        <a th:href="@{/solicitar}" class="neo-button">Start</a>
-    </div>
-    <div class="neo-box menu-card">
-        <h3>Check Status</h3>
-        <a th:href="@{/estado}" class="neo-button">View</a>
-    </div>
-    <div class="neo-box menu-card">
-        <h3>My Simulations</h3>
-        <a th:href="@{/mis-solicitudes}" class="neo-button">List Tokens</a>
-    </div>
-    <div class="neo-box menu-card">
-        <h3>View Results</h3>
-        <a th:href="@{/resultado}" class="neo-button">Play Grid</a>
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <h1>Hola, <span th:text="${nombreUsuario}">Viajero</span>!</h1>
+        <p>¿Qué quieres dibujar hoy?</p>
+        <div class="nav-links">
+            <a th:href="@{/solicitar}" class="btn">Nueva Simulación</a>
+            <a th:href="@{/estado}" class="btn">Ver Estado</a>
+            <a th:href="@{/resultado}" class="btn">Ver Resultado</a>
+            <a th:href="@{/mis-solicitudes}" class="btn">Mis Solicitudes</a>
+            <a th:href="@{/email}" class="btn">Enviar Mensaje</a>
+        </div>
     </div>
 </div>
-
-<br>
-<a th:href="@{/logout}" class="neo-button" style="background-color: var(--accent-pink);">LOGOUT</a>
-
 </body>
 </html>

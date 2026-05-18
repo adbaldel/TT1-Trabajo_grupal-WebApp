@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>System Notification</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Aviso</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <h1>Mensaje del Sistema</h1>
 
-<h1>SYSTEM MESSAGE</h1>
+        <div class="error" th:if="${problemDetails != null}">
+            <p th:text="${problemDetails}"></p>
+        </div>
 
-<div class="neo-box" th:style="${problemDetails != null ? 'background-color: var(--accent-pink);' : 'background-color: var(--accent-yellow);'}">
-    <h2 th:text="${resultado}" style="margin:0;">Operation Result</h2>
+        <p th:if="${resultado != null}" th:text="${resultado}" style="font-size: 1.5rem;"></p>
 
-    <div th:if="${problemDetails != null}" style="margin-top: 15px; padding-top: 15px; border-top: 4px solid var(--border-color);">
-        <strong>Error Details:</strong>
-        <p th:text="${problemDetails}"></p>
+        <br><br>
+        <a th:href="@{/home}" class="btn">Volver al Inicio</a>
     </div>
 </div>
-
-<a th:href="@{/home}" class="neo-button">← Return Home</a>
-
 </body>
 </html>

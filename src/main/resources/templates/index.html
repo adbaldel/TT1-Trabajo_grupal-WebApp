@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login - SimWebApp</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Login - Simulador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Simulador TT1</h1>
-
-<div class="neo-box" style="width: 400px; max-width: 100%;">
-    <h2 style="margin-top:0;">Access Control</h2>
-    <form th:action="@{/login}" method="post">
-        <label for="nombreUsuario"><b>Username:</b></label>
-        <input type="text" id="nombreUsuario" name="nombreUsuario" class="neo-input" placeholder="Enter username..." required />
-        <button type="submit" class="neo-button" style="width: 100%;">ENTRAR</button>
-    </form>
+<div class="container">
+    <div class="card">
+        <h1>Bienvenido al Simulador</h1>
+        <form action="#" th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="nombreUsuario">¿Cuál es tu nombre?</label>
+                <input type="text" id="nombreUsuario" name="nombreUsuario" required placeholder="Firma aquí...">
+            </div>
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+    </div>
 </div>
-
 </body>
 </html>

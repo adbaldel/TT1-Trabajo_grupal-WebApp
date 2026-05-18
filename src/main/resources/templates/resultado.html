@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>View Results - SimWebApp</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>Consultar Resultado</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Load Grid</h1>
-
-<div class="neo-box" style="width: 400px; max-width: 100%; background-color: var(--accent-blue);">
-    <h2 style="margin-top:0;">Replay Data</h2>
-    <form th:action="@{/resultado}" method="post">
-        <label for="token"><b>Simulation Token:</b></label>
-        <input type="number" id="token" name="token" class="neo-input" placeholder="e.g. 12345" required />
-
-        <button type="submit" class="neo-button" style="width: 100%; background-color: var(--accent-yellow);">LOAD TABLERO</button>
-    </form>
+<div class="container">
+    <div class="card">
+        <h1>Consultar Token</h1>
+        <form action="#" th:action="@{/resultado}" method="post">
+            <div class="form-group">
+                <label for="token">Ingresa tu Token Numérico:</label>
+                <input type="number" id="token" name="token" required>
+            </div>
+            <button type="submit" class="btn">Consultar</button>
+            <a th:href="@{/home}" class="btn" style="background-color: transparent;">Volver</a>
+        </form>
+    </div>
 </div>
-
-<a th:href="@{/home}" class="neo-button">← Back to Home</a>
-
 </body>
 </html>

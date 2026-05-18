@@ -1,278 +1,190 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Simulation Player</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <style>
-        .grid-container {
-            display: grid;
-            gap: 2px;
-            background-color: var(--border-color); /* acts as grid lines */
-            border: var(--border-width) solid var(--border-color);
-            box-shadow: 8px 8px 0px var(--border-color);
-            margin: 20px 0;
-        }
-        .grid-cell {
-            background-color: white; /* Default empty color */
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .legend-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 2px solid var(--border-color);
-            background-color: white;
-            box-shadow: 4px 4px 0px var(--border-color);
-            width: 100%;
-            max-width: 800px;
-            box-sizing: border-box;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 800;
-            text-transform: capitalize;
-        }
-        .legend-color-box {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border-color);
-        }
-
-        /* Styling for the timeline slider */
-        .neo-slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 15px;
-            background: #e0e0e0;
-            border: 2px solid var(--border-color);
-            outline: none;
-        }
-        .neo-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 25px;
-            height: 25px;
-            background: var(--accent-blue);
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-        }
-        .neo-slider::-moz-range-thumb {
-            width: 25px;
-            height: 25px;
-            background: var(--accent-blue);
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-        }
-    </style>
+    <title>Tablero de Simulación</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Simulation View</h1>
-
-<div th:if="${problemDetails != null}" class="error-banner">
-    <p th:text="${problemDetails}">Error</p>
-</div>
-
-<div th:if="${problemDetails == null}" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-
-    <div id="dynamic-legend" class="legend-container" style="display: none;">
+<div class="container">
+    <div class="card" th:if="${gridSize == -1}">
+        <h1>Error de Simulación</h1>
+        <p class="error" th:text="${problemDetails}">Error.</p>
+        <a th:href="@{/home}" class="btn">Volver</a>
     </div>
 
-    <div class="neo-box" style="width: 100%; max-width: 800px; padding: 20px; box-sizing: border-box;">
+    <div class="card" th:if="${gridSize != -1}">
+        <h1>El Tablero Mágico</h1>
+        <p style="text-align: center;">Tiempo: <span id="timeDisplay">0</span> / <span th:text="${maxTime}"></span></p>
 
-        <h2 style="margin-top: 0;">Time: <span id="time-display">0</span> / <span th:text="${maxTime}"></span></h2>
+        <div class="controls-panel">
+            <button class="btn" onclick="prevFrame()">&#9664; Atrás</button>
+            <button class="btn" id="playBtn" onclick="togglePlay()">&#9658; Play</button>
+            <button class="btn" onclick="nextFrame()">Adelante &#9654;</button>
 
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-            <strong>Timeline:</strong>
-            <input type="range" id="time-slider" min="0" th:max="${maxTime}" value="0" class="neo-slider">
+            <select id="speedSelect" onchange="changeSpeed()" style="width: auto; margin-left: 10px;">
+                <option value="2000">Muy lento(2s)</option>
+                <option value="1000">Lento (1s)</option>
+                <option value="500" selected>Normal (0.5s)</option>
+                <option value="250">Rápido (0.25s)</option>
+                <option value="125">Muy Rápido (0.125s)</option>
+                <option value="50">Ulta (0.05s)</option>
+            </select>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-            <div style="display: flex; gap: 10px;">
-                <button class="neo-button" onclick="prevFrame()">◀ Prev</button>
-                <button class="neo-button" onclick="togglePlay()" id="play-btn">Play</button>
-                <button class="neo-button" onclick="nextFrame()">Next ▶</button>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <strong>Speed:</strong>
-                <select id="speed-select" class="neo-input" style="width: auto; margin-bottom: 0; padding: 10px;" onchange="updateSpeed()">
-                    <option value="2000">0.25x</option>
-                    <option value="1000">0.5x</option>
-                    <option value="500" selected>1x</option>
-                    <option value="250">2x</option>
-                    <option value="125">4x</option>
-                    <option value="50">Max</option>
-                </select>
-            </div>
+        <div class="slider-container">
+            <input type="range" id="timeSlider" min="0" th:max="${maxTime}" value="0" oninput="scrubTime(this.value)">
         </div>
 
+        <div class="board-container">
+            <!-- Grid style generated dynamically via JS based on gridSize -->
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="legend" id="legend">
+            <!-- Populated by JS -->
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a th:href="@{/home}" class="btn" style="background-color: transparent;">Salir</a>
+        </div>
     </div>
-
-    <div id="sim-grid" class="grid-container"></div>
 </div>
 
-<br>
-<a th:href="@{/home}" class="neo-button" style="background-color: white;">← Back to Home</a>
-
+<!-- Injecting Thymeleaf attributes directly into JavaScript -->
 <script th:inline="javascript">
     /*<![CDATA[*/
-    const gridSize = /*[[${gridSize}]]*/ 10;
+    const gridSize = /*[[${gridSize}]]*/ -1;
     const maxTime = /*[[${maxTime}]]*/ 0;
     const creaturesMap = /*[[${creatures}]]*/ {};
     /*]]>*/
 
-    const neoPalette = [
-        '#ffde59', '#5ce1e6', '#ff66c4', '#7ed957', '#ff914d', '#c084fc', '#ff5757'
-    ];
+    if(gridSize > 0) {
+        let currentFrame = 0;
+        let isPlaying = false;
+        let intervalId = null;
+        let playSpeed = 500;
 
-    const creatureColorMap = {};
-    let colorIndex = 0;
+        // Generate a distinct color palette
+        const colorPalette = ["#ff9ff3", "#feca57", "#ff6b6b", "#48dbfb", "#1dd1a1", "#c8d6e5", "#5f27cd", "#01a3a4"];
+        const speciesColors = {};
 
-    function getCreatureColor(name) {
-        if (!creatureColorMap[name]) {
-            creatureColorMap[name] = neoPalette[colorIndex % neoPalette.length];
-            colorIndex++;
-        }
-        return creatureColorMap[name];
-    }
+        // Elements
+        const boardEl = document.getElementById('board');
+        const legendEl = document.getElementById('legend');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const timeSlider = document.getElementById('timeSlider');
+        const playBtn = document.getElementById('playBtn');
 
-    let currentTime = 0;
-    let playInterval = null;
-    let playSpeed = 500; // Default 500ms
+        function initBoard() {
+            // Set CSS Grid columns
+            boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
 
-    const gridElement = document.getElementById('sim-grid');
-    const timeSlider = document.getElementById('time-slider');
-
-    // Listen for user interacting with the slider
-    if (timeSlider) {
-        timeSlider.addEventListener('input', function() {
-            currentTime = parseInt(this.value);
-            renderFrame(currentTime);
-        });
-    }
-
-    if (gridElement) {
-        setupGrid();
-        buildLegend();
-        renderFrame(currentTime);
-    }
-
-    function setupGrid() {
-        gridElement.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-        gridElement.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
-
-        for (let y = 0; y < gridSize; y++) {
-            for (let x = 0; x < gridSize; x++) {
-                let cell = document.createElement('div');
-                cell.className = 'grid-cell';
-                cell.id = `cell-${x}-${y}`;
-                gridElement.appendChild(cell);
-            }
-        }
-    }
-
-    function buildLegend() {
-        const legendContainer = document.getElementById('dynamic-legend');
-        if (Object.keys(creaturesMap).length === 0) return;
-
-        const uniqueCreatures = [...new Set(Object.values(creaturesMap))].map(c => c.toLowerCase());
-
-        if (uniqueCreatures.length > 0) {
-            legendContainer.style.display = 'flex';
-            uniqueCreatures.forEach(name => {
-                const color = getCreatureColor(name);
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'legend-item';
-
-                const colorBox = document.createElement('div');
-                colorBox.className = 'legend-color-box';
-                colorBox.style.backgroundColor = color;
-
-                const textNode = document.createTextNode(name);
-                itemDiv.appendChild(colorBox);
-                itemDiv.appendChild(textNode);
-                legendContainer.appendChild(itemDiv);
-            });
-        }
-    }
-
-    function renderFrame(time) {
-        document.getElementById('time-display').innerText = time;
-        if (timeSlider) timeSlider.value = time; // Sync slider with current time
-
-        document.querySelectorAll('.grid-cell').forEach(cell => {
-            cell.style.backgroundColor = 'white';
-            cell.innerHTML = '';
-            cell.title = '';
-        });
-
-        for (let y = 0; y < gridSize; y++) {
-            for (let x = 0; x < gridSize; x++) {
-                const key = `${time}-${x}-${y}`;
-                if (creaturesMap[key]) {
-                    const cell = document.getElementById(`cell-${x}-${y}`);
-                    const creatureName = creaturesMap[key].toLowerCase();
-
-                    cell.style.backgroundColor = getCreatureColor(creatureName);
-                    // cell.innerText = creatureName.charAt(0).toUpperCase();
-                    cell.title = creatureName;
+            // Create cells
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `cell-${x}-${y}`;
+                    boardEl.appendChild(cell);
                 }
             }
         }
-    }
 
-    function nextFrame() {
-        if (currentTime < maxTime) {
-            currentTime++;
-            renderFrame(currentTime);
-        } else {
-            togglePlay(); // Auto-stop at end
+        function extractSpeciesAndLegend() {
+            let uniqueSpecies = new Set();
+            for (let key in creaturesMap) {
+                uniqueSpecies.add(creaturesMap[key]);
+            }
+
+            let colorIndex = 0;
+            uniqueSpecies.forEach(species => {
+                let color = colorPalette[colorIndex % colorPalette.length];
+                speciesColors[species] = color;
+                colorIndex++;
+
+                // Add to legend UI
+                let legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                legendItem.innerHTML = `<div class="legend-color" style="background-color: ${color};"></div> <span>${species}</span>`;
+                legendEl.appendChild(legendItem);
+            });
         }
-    }
 
-    function prevFrame() {
-        if (currentTime > 0) {
-            currentTime--;
-            renderFrame(currentTime);
+        function renderFrame(time) {
+            // Clear board
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.style.backgroundColor = 'white';
+                cell.innerText = '';
+            });
+
+            // Draw creatures for this time
+            for (let x = 0; x < gridSize; x++) {
+                for (let y = 0; y < gridSize; y++) {
+                    let key = `${time}-${x}-${y}`;
+                    if (creaturesMap[key]) {
+                        let species = creaturesMap[key];
+                        let cell = document.getElementById(`cell-${x}-${y}`);
+                        cell.style.backgroundColor = speciesColors[species];
+                        // Optional: add first letter of creature inside cell
+                        cell.innerText = species.charAt(0).toUpperCase();
+                    }
+                }
+            }
+
+            // Update UI indicators
+            timeDisplay.innerText = time;
+            timeSlider.value = time;
+            currentFrame = time;
         }
-    }
 
-    function togglePlay() {
-        const btn = document.getElementById('play-btn');
-        if (playInterval) {
-            clearInterval(playInterval);
-            playInterval = null;
-            btn.innerText = "Play";
-            btn.style.backgroundColor = "var(--accent-yellow)";
-        } else {
-            if (currentTime >= maxTime) currentTime = 0;
-            playInterval = setInterval(nextFrame, playSpeed);
-            btn.innerText = "Pause";
-            btn.style.backgroundColor = "var(--accent-pink)";
+        function playLoop() {
+            if (currentFrame >= maxTime) {
+                togglePlay(); // Auto-stop at end
+                return;
+            }
+            currentFrame++;
+            renderFrame(currentFrame);
         }
-    }
 
-    function updateSpeed() {
-        const select = document.getElementById('speed-select');
-        playSpeed = parseInt(select.value);
-
-        // If the simulation is currently playing, restart the interval immediately to apply new speed
-        if (playInterval) {
-            clearInterval(playInterval);
-            playInterval = setInterval(nextFrame, playSpeed);
+        // Controls
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                if (currentFrame >= maxTime) currentFrame = 0; // Reset if at end
+                playBtn.innerHTML = '&#10074;&#10074; Pause';
+                intervalId = setInterval(playLoop, playSpeed);
+            } else {
+                playBtn.innerHTML = '&#9658; Play';
+                clearInterval(intervalId);
+            }
         }
+
+        function changeSpeed() {
+            const speedSelect = document.getElementById('speedSelect');
+            playSpeed = parseInt(speedSelect.value);
+            if (isPlaying) {
+                clearInterval(intervalId);
+                intervalId = setInterval(playLoop, playSpeed);
+            }
+        }
+
+        function prevFrame() {
+            if (currentFrame > 0) renderFrame(currentFrame - 1);
+        }
+
+        function nextFrame() {
+            if (currentFrame < maxTime) renderFrame(currentFrame + 1);
+        }
+
+        function scrubTime(value) {
+            renderFrame(parseInt(value));
+        }
+
+        // Startup
+        initBoard();
+        extractSpeciesAndLegend();
+        renderFrame(0);
     }
 </script>
 </body>
